@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WordPress Software Post Generator</title>
+    <title>Software Post Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2B2853;
-            --primary-hover: #1E1A3F;
-            --success-color: #2ecc71;
-            --light-bg: #f9f9f9;
-            --lighter-bg: #f0f0f0;
-            --border-color: #ddd;
-            --text-color: #333;
-            --heading-color: #2B2853;
+            --bg-color: #1A202C;
+            --card-bg: #2D3748;
+            --input-bg: #262F40;
+            --primary-accent: #38B2AC;
+            --primary-hover: #4FD1C5;
+            --secondary-accent: #4A5568;
+            --secondary-hover: #606B7F;
+            --success-color: #38A169;
+            --heading-color: #E2E8F0;
+            --text-color: #A0AEC0;
+            --border-color: #4A5568;
         }
         
         * {
@@ -23,16 +29,22 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Lexend', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: #f5f7fa;
+            background-color: var(--bg-color);
             padding: 20px;
         }
         
-        h1, h2, h3 {
+        h1, h2, h3, label {
             color: var(--heading-color);
             margin-bottom: 15px;
+        }
+
+        label, .section-title, .output-box h3, .header h1 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .container {
@@ -42,20 +54,12 @@
             margin: 0 auto;
         }
         
-        .input-section {
+        .input-section, .output-section {
             flex: 1;
-            background-color: white;
+            background-color: var(--card-bg);
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        
-        .output-section {
-            flex: 1;
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
         
         .form-group {
@@ -63,25 +67,31 @@
         }
         
         label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--heading-color);
+            font-weight: 400;
+            font-size: 0.9rem;
         }
         
         input[type="text"], textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 14px;
-            transition: border 0.3s;
+            background-color: var(--input-bg);
+            color: var(--heading-color);
+            transition: all 0.2s ease-in-out;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: var(--text-color);
+            opacity: 0.8;
         }
         
         input[type="text"]:focus, textarea:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(43, 40, 83, 0.2);
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.3);
         }
         
         textarea {
@@ -90,24 +100,25 @@
         }
         
         button {
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--primary-accent);
+            color: #ffffff;
             border: none;
             padding: 12px 20px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
             display: block;
             margin: 25px auto;
             width: 220px;
-            transition: all 0.3s;
+            transition: all 0.2s ease-in-out;
+            font-family: 'Lexend', sans-serif;
         }
         
         button:hover {
             background-color: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         button.copied {
@@ -117,73 +128,24 @@
         #outputCode {
             width: 100%;
             height: 300px;
-            font-family: 'Consolas', 'Monaco', monospace;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
             font-size: 13px;
             white-space: pre-wrap;
-            background-color: #f8f9fa;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow-y: auto;
             line-height: 1.5;
         }
         
         .optional-section {
-            background-color: var(--light-bg);
-            padding: 15px;
+            background-color: rgba(0,0,0,0.15);
+            padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
         
         .section-title {
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-weight: 600;
             color: var(--heading-color);
             font-size: 18px;
-        }
-        
-        .req-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .req-field {
-            margin-bottom: 15px;
-        }
-        
-        .edition-version {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        
-        .output-box {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: var(--lighter-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .output-box h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        
-        .output-box input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background-color: white;
-            font-family: 'Consolas', 'Monaco', monospace;
-        }
-        
-        .output-box button {
-            margin: 10px 0 0;
-            width: 100%;
         }
         
         .two-column {
@@ -191,46 +153,84 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
+
+        .output-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
         
-        .three-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+        .output-box:first-child {
+            margin-top: 0;
+        }
+        
+        .output-box h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .output-box input {
+            background-color: var(--input-bg);
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            margin-bottom: 15px;
+        }
+        
+        .output-box button {
+            margin: 10px 0 0;
+            width: 100%;
+            background-color: var(--secondary-accent);
+        }
+
+        .output-box button:hover {
+             background-color: var(--secondary-hover);
+        }
+
+        .output-box button.copied {
+            background-color: var(--success-color);
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: linear-gradient(180deg, rgba(45, 55, 72, 0.2) 0%, rgba(26, 32, 44, 0.3) 100%);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
         }
         
         .header h1 {
-            font-size: 28px;
-            color: var(--heading-color);
-            margin-bottom: 10px;
+            font-size: 36px;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 15px;
         }
         
         .header p {
-            color: #666;
+            color: var(--text-color);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        /* Generate Button Animation */
         @keyframes pulse {
             0% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(43, 40, 83, 0.4);
+                box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.4);
             }
             70% {
                 transform: scale(1.02);
-                box-shadow: 0 0 0 10px rgba(43, 40, 83, 0);
+                box-shadow: 0 0 0 12px rgba(56, 178, 172, 0);
             }
             100% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(43, 40, 83, 0);
+                box-shadow: 0 0 0 0 rgba(56, 178, 172, 0);
             }
         }
         
         #generateBtn {
-            animation: pulse 2s infinite;
+            animation: pulse 2.5s infinite;
         }
         
         #generateBtn:hover {
@@ -241,94 +241,101 @@
             .container {
                 flex-direction: column;
             }
-            
-            .edition-version {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .three-column {
-                grid-template-columns: 1fr 1fr;
-            }
         }
         
         @media (max-width: 768px) {
-            .req-fields, .two-column {
+            body {
+                padding: 15px;
+            }
+            .two-column {
                 grid-template-columns: 1fr;
             }
-            
-            .edition-version, .three-column {
-                grid-template-columns: 1fr;
+            .header h1 {
+                font-size: 28px;
+            }
+            .header p {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>WordPress Software Post Generator</h1>
-        <p>Generate complete WordPress post code for software downloads with all required sections</p>
+        <h1>⚙️ Software Post Generator ⚙️</h1>
+        <p>© blackHAWK</p>
     </div>
     
     <div class="container">
         <div class="input-section">
             <div class="form-group">
-                <label for="softwareName">Software Name:</label>
+                <label for="softwareName">💻 Software Name:</label>
                 <input type="text" id="softwareName" placeholder="Enter software name">
             </div>
             
             <div class="two-column">
                 <div class="form-group">
-                    <label for="developer">Developer:</label>
+                    <label for="developer">👨‍💻 Developer:</label>
                     <input type="text" id="developer" placeholder="Enter developer name">
                 </div>
                 
                 <div class="form-group">
-                    <label for="versionNumber">Version Number:</label>
-                    <input type="text" id="versionNumber" placeholder="e.g., v1.1">
+                    <label for="versionNumber">🔖 Version Number:</label>
+                    <input type="text" id="versionNumber" placeholder="e.g., 1.2 (without 'v')">
                 </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="versionExtra">ℹ️ Version Extra Info (optional):</label>
+                <input type="text" id="versionExtra" placeholder="e.g., x64 or Update 3">
             </div>
             
             <div class="two-column">
                 <div class="form-group">
-                    <label for="releaseDate">Released:</label>
-                    <input type="text" id="releaseDate" placeholder="e.g., 1 January 20">
+                    <label for="releaseDate">🗓️ Released:</label>
+                    <input type="text" id="releaseDate" placeholder="e.g., 1 January 2024">
                 </div>
                 
                 <div class="form-group">
-                    <label for="size">Size:</label>
+                    <label for="size">💾 Size:</label>
                     <input type="text" id="size" placeholder="e.g., 1.0GB">
                 </div>
             </div>
             
             <div class="form-group">
-                <label for="purpose">Purpose:</label>
+                <label for="purpose">🎯 Purpose:</label>
                 <input type="text" id="purpose" placeholder="e.g., video editing, system optimization">
             </div>
             
             <div class="form-group">
-                <label for="officialLink">Official Website URL:</label>
+                <label for="officialLink">🌐 Official Website URL:</label>
                 <input type="text" id="officialLink" placeholder="https://example.com">
             </div>
 
             <div class="form-group">
-                    <label for="detailedDescription">Description:</label>
+                <label for="source">📍 Source:</label>
+                <input type="text" id="source" placeholder="e.g., FileCR, GetIntoPC">
+            </div>
+
+            <div class="form-group">
+                    <label for="detailedDescription">📝 Description:</label>
                     <textarea id="detailedDescription" placeholder="Enter detailed description"></textarea>
                 </div>
             
             <div class="optional-section">
-                <div class="section-title">Optional Sections (leave blank to exclude)</div>
+                <div class="section-title">✨ Optional Sections</div>
                 
                 <div class="form-group">
-                    <label for="instructions">Instructions:</label>
-                    <textarea id="instructions" placeholder="Enter installation instructions (one per line)"></textarea>
+                    <label for="instructions">🛠️ Installations:</label>
+                    <textarea id="instructions" placeholder="Enter installation (one per line)"></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="features">Features:</label>
-                    <textarea id="features" placeholder="Enter features"></textarea>
+                    <label for="features">⭐ Features:</label>
+                    <textarea id="features" placeholder="Enter features (one per line)"></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="crackInfo">Crack Info:</label>
+                    <label for="crackInfo">📌 Crack Info:</label>
                     <textarea id="crackInfo" placeholder="Enter crack information"></textarea>
                 </div>
                 
@@ -339,325 +346,135 @@
         
         <div class="output-section">
             <div class="output-box">
-                <h3>WordPress Post Code:</h3>
+                <h3>📄 WordPress Post Code:</h3>
                 <textarea id="outputCode" readonly></textarea>
-                <button id="copyCodeBtn" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button id="copyCodeBtn" onclick="copyToClipboard('copyCodeBtn')">Copy to Clipboard</button>
             </div>
             
             <div class="output-box">
-                <h3>Download Title:</h3>
+                <h3>🔽 Download Title:</h3>
                 <input type="text" id="downloadTitle" readonly>
-                <button id="copyTitleBtn" onclick="copyTitleToClipboard()">Copy Title</button>
+                <button id="copyTitleBtn" onclick="copyToClipboard('copyTitleBtn', 'downloadTitle')">Copy Title</button>
             </div>
             
             <div class="output-box">
-                <h3>Focus Keyphrase:</h3>
+                <h3>🔑 Focus Keyphrase:</h3>
                 <input type="text" id="focusKeyphrase" readonly>
-                <button id="copyKeyphraseBtn" onclick="copyKeyphraseToClipboard()">Copy Keyphrase</button>
+                <button id="copyKeyphraseBtn" onclick="copyToClipboard('copyKeyphraseBtn', 'focusKeyphrase')">Copy Keyphrase</button>
             </div>
             
             <div class="output-box">
-                <h3>Slug:</h3>
+                <h3>🔗 Slug:</h3>
                 <input type="text" id="slug" readonly>
-                <button id="copySlugBtn" onclick="copySlugToClipboard()">Copy Slug</button>
+                <button id="copySlugBtn" onclick="copyToClipboard('copySlugBtn', 'slug')">Copy Slug</button>
             </div>
             
             <div class="output-box">
-                <h3>Image Renamer:</h3>
+                <h3>🖼️ Image Renamer:</h3>
                 <input type="text" id="imageRenamer" readonly>
-                <button id="copyImageBtn" onclick="copyImageToClipboard()">Copy Image Name</button>
+                <button id="copyImageBtn" onclick="copyToClipboard('copyImageBtn', 'imageRenamer')">Copy Image Name</button>
             </div>
         </div>
     </div>
 
     <script>
         function formatReleaseDate(dateString) {
+            if (!dateString) return '1 January 2024';
             const monthMap = {
-                'jan': 'January', 'jan,': 'January',
-                'feb': 'February', 'feb,': 'February',
-                'mar': 'March', 'mar,': 'March',
-                'apr': 'April', 'apr,': 'April',
-                'may': 'May', 'may,': 'May',
-                'jun': 'June', 'jun,': 'June',
-                'jul': 'July', 'jul,': 'July',
-                'aug': 'August', 'aug,': 'August',
-                'sep': 'September', 'sep,': 'September',
-                'oct': 'October', 'oct,': 'October',
-                'nov': 'November', 'nov,': 'November',
-                'dec': 'December', 'dec,': 'December'
+                'jan': 'January', 'feb': 'February', 'mar': 'March', 'apr': 'April',
+                'may': 'May', 'jun': 'June', 'jul': 'July', 'aug': 'August',
+                'sep': 'September', 'oct': 'October', 'nov': 'November', 'dec': 'December'
             };
-
-            const datePattern = /(\d{1,2})\s*([a-z]{3},)\s*(\d{4})|([a-z]{3},)\s*(\d{1,2})\s*,?\s*(\d{4})/i;
-            const match = dateString.match(datePattern);
-
-            if (match) {
-                let day, month, year;
-                if (match[1]) {
-                    day = match[1];
-                    month = match[2].toLowerCase();
-                    year = match[3];
-                } else {
-                    day = match[5];
-                    month = match[4].toLowerCase();
-                    year = match[6];
-                }
-
-                const fullMonth = monthMap[month] || month.replace(',', '');
-                return `${day} ${fullMonth} ${year}`;
+            for (const key in monthMap) {
+                dateString = dateString.toLowerCase().replace(key, monthMap[key]);
             }
-
-            return dateString || '1 January 20';
+            return dateString;
         }
 
         function generateCode() {
             const softwareName = document.getElementById('softwareName').value || 'XXX';
-            const developer = document.getElementById('developer').value || '';
-            const versionNumber = document.getElementById('versionNumber').value || 'v1.1';
-            const releaseDateInput = document.getElementById('releaseDate').value;
-            const releaseDate = formatReleaseDate(releaseDateInput);
+            const developer = document.getElementById('developer').value || 'Developer';
+            const versionNumberInput = document.getElementById('versionNumber').value || '1.0';
+            const versionExtra = document.getElementById('versionExtra').value;
+            const releaseDate = formatReleaseDate(document.getElementById('releaseDate').value);
             const size = document.getElementById('size').value || '1.0GB';
-            const purpose = document.getElementById('purpose').value || 'PURPOSE';
+            const purpose = document.getElementById('purpose').value || 'General Purpose';
             const officialLink = document.getElementById('officialLink').value;
+            const source = document.getElementById('source').value || 'N/A';
             const instructions = document.getElementById('instructions').value;
             const features = document.getElementById('features').value;
             const crackInfo = document.getElementById('crackInfo').value;
             const detailedDescription = document.getElementById('detailedDescription').value;
-            
-            const downloadTitle = `Download ${softwareName} for Windows FREE`;
+
+            let fullVersion = `v${versionNumberInput}` + (versionExtra ? ` ${versionExtra}` : '');
+            let downloadTitle = `Download ${softwareName} ${fullVersion}`;
             document.getElementById('downloadTitle').value = downloadTitle;
-            
+
             const focusKeyphrase = `Download ${softwareName}`;
             document.getElementById('focusKeyphrase').value = focusKeyphrase;
-            
-            let slug = softwareName.toLowerCase()
-                .replace(/[^\w\s]/gi, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-');
+
+            let slug = softwareName.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
             document.getElementById('slug').value = slug;
-            
+
             const imageRenamer = `download-${slug}.webp`;
             document.getElementById('imageRenamer').value = imageRenamer;
-            
-            let officialLinkHtml = '';
-            if (officialLink) {
-                officialLinkHtml = `<a href="${officialLink}" target="_blank" rel="noreferrer noopener nofollow">Official Website</a>`;
-            }
-            
-            let instructionsSection = '';
-            if (instructions) {
-                const lines = instructions.split('\n').filter(line => line.trim() !== '');
-                if (lines.length > 0) {
-                    instructionsSection = `<!-- wp:heading -->
-<h2 class="wp-block-heading">Instructions</h2>
-<!-- /wp:heading -->
 
-<!-- wp:list -->
-<ul class="wp-block-list">`;
-                    
-                    lines.forEach(line => {
-                        instructionsSection += `<!-- wp:list-item -->
-<li>${line}</li>
-<!-- /wp:list-item -->
+            const createList = (text) => text.split('\n').filter(line => line.trim() !== '').map(line => `\n<li>${line}</li>\n`).join('\n\n');
 
-`;
-                    });
-                    
-                    instructionsSection += `</ul>
-<!-- /wp:list -->
+            let instructionsSection = instructions ? `\n<h2 class="wp-block-heading">Installation</h2>\n\n\n\n<ul class="wp-block-list">${createList(instructions)}</ul>\n\n\n` : '';
+            let featuresSection = features ? `\n<h2 class="wp-block-heading">Features</h2>\n\n\n\n<ul class="wp-block-list">${createList(features)}</ul>\n\n\n` : '';
+            let crackInfoSection = crackInfo ? `\n<h2 class="wp-block-heading">Crack Info</h2>\n\n\n\n<p>${crackInfo.replace(/\n/g, '<br>')}</p>\n\n\n` : '';
+            let detailedDescriptionSection = detailedDescription ? `\n<h2 class="wp-block-heading">Description</h2>\n\n\n\n<p>${detailedDescription.replace(/\n/g, '<br>')}</p>\n\n\n` : '';
 
-`;
-                }
-            }
-            
-            let featuresSection = '';
-            if (features) {
-                featuresSection = `<!-- wp:heading -->
-<h2 class="wp-block-heading">Features</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>${features}</p>
-<!-- /wp:paragraph -->
-
-`;
-            }
-            
-            let crackInfoSection = '';
-            if (crackInfo) {
-                crackInfoSection = `<!-- wp:heading -->
-<h2 class="wp-block-heading">Crack Info</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>${crackInfo}</p>
-<!-- /wp:paragraph -->
-
-`;
-            }
-            
-            let detailedDescriptionSection = '';
-            if (detailedDescription) {
-                detailedDescriptionSection = `<!-- wp:heading -->
-<h2 class="wp-block-heading">Description</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>${detailedDescription}</p>
-<!-- /wp:paragraph -->
-
-`;
-            }
-            
-            let code = `<!-- wp:paragraph -->
-<p><strong>Download&nbsp;${softwareName}&nbsp;for Windows FREE</strong>. Here is a direct link to download ${softwareName} latest version (${versionNumber}) for free. ${softwareName} is developed by ${developer || 'GAMESX'}. It was released on ${releaseDate} and is considered one of the best software for ${purpose}.</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:heading -->
+            let code = `<p><strong>Download&nbsp;${softwareName}&nbsp;for Windows FREE</strong>. Here is a direct link to download ${softwareName} latest version ${fullVersion} for free. ${softwareName} is developed by ${developer}. It was released on ${releaseDate} and is considered one of the best software for ${purpose}.</p>
 <h2 class="wp-block-heading">Software Info</h2>
-<!-- /wp:heading -->
-
-<!-- wp:list -->
-<ul class="wp-block-list"><!-- wp:list-item -->
+<ul class="wp-block-list">
 <li><strong>Name</strong>: ${softwareName}</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
-<li><strong>Version</strong>: ${versionNumber}</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
+<li><strong>Version</strong>: ${fullVersion}</li>
 <li><strong>Released</strong>: ${releaseDate}</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
 <li><strong>Size</strong>: ${size}</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
-<li><strong>Source</strong>:</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
-<li><strong>Available on</strong>: ${officialLinkHtml || '<a href="#" target="_blank" rel="noreferrer noopener nofollow">Official Website</a>'} </li>
-<!-- /wp:list-item --></ul>
-<!-- /wp:list -->
-
-<!-- wp:heading {"textAlign":"center","className":"dl_head"} -->
+<li><strong>Source</strong>: ${source}</li>
+<li><strong>Official Website</strong>: <a href="${officialLink || '#'}" target="_blank" rel="noreferrer noopener nofollow">Visit Here</a></li>
+</ul>
 <h2 class="wp-block-heading has-text-align-center dl_head">${downloadTitle}</h2>
-<!-- /wp:heading -->
-
-<!-- wp:group {"className":"dl_grp","layout":{"type":"constrained"}} -->
-<div class="wp-block-group dl_grp"><!-- wp:shortcode -->
-[su_spoiler class="file-spoiler" title="Download as File" open="yes" icon="arrow" style="fancy"]
-<!-- /wp:shortcode -->
-
-<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
-<div class="wp-block-buttons"><!-- wp:button {"className":"download_file"} -->
-<div class="wp-block-button download_file"><a class="wp-block-button__link wp-element-button" href="#" target="_blank" rel="noreferrer noopener nofollow">Download Zip (${size})</a></div>
-<!-- /wp:button --></div>
-<!-- /wp:buttons -->
-
-<!-- wp:paragraph {"align":"center","fontSize":"medium"} -->
-<p class="has-text-align-center has-medium-font-size"><strong><mark style="background-color:rgba(0, 0, 0, 0);color:#de0000" class="has-inline-color">Password</mark></strong>: GamesLeech </p>
-<!-- /wp:paragraph -->
-
-<!-- wp:shortcode -->
+<div class="wp-block-group dl_grp">[su_spoiler class="file-spoiler" title="Download as File" open="yes" icon="arrow" style="fancy"]
+<div class="wp-block-buttons"><div class="wp-block-button download_file"><a class="wp-block-button__link wp-element-button" href="#" target="_blank" rel="noreferrer noopener nofollow">Download Zip (${size})</a></div>
+</div>
+<p class="has-text-align-center has-medium-font-size"><strong><mark style="background-color:rgba(0, 0, 0, 0);color:#de0000" class="has-inline-color">Password</mark></strong>: YourPassword</p>
 [/su_spoiler]
-<!-- /wp:shortcode --></div>
-<!-- /wp:group -->
-
+</div>
 ${instructionsSection}
-<!-- wp:shortcode -->
-[su_spoiler class="description-spoiler" title="Description" icon="plus" style="fancy"]
-<!-- /wp:shortcode -->
 
+[su_spoiler class="description-spoiler" title="More Info" icon="plus" style="fancy"]
 ${featuresSection}
-${crackInfoSection}
 ${detailedDescriptionSection}
-<!-- wp:shortcode -->
-[/su_spoiler]
-<!-- /wp:shortcode -->
+${crackInfoSection}
 
-<!-- wp:paragraph -->
+[/su_spoiler]
 <p></p>
-<!-- /wp:paragraph -->`;
+`;
 
             document.getElementById('outputCode').value = code;
         }
         
-        function copyToClipboard() {
-            const outputCode = document.getElementById('outputCode');
-            outputCode.select();
-            document.execCommand('copy');
+        function copyToClipboard(buttonId, elementId = 'outputCode') {
+            const element = document.getElementById(elementId);
+            element.select();
+            element.setSelectionRange(0, 99999);
             
-            const copyBtn = document.getElementById('copyCodeBtn');
-            copyBtn.textContent = 'Copied!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy to Clipboard';
-                copyBtn.classList.remove('copied');
-            }, 2000);
-        }
-        
-        function copyTitleToClipboard() {
-            const downloadTitle = document.getElementById('downloadTitle');
-            downloadTitle.select();
-            document.execCommand('copy');
-            
-            const copyBtn = document.getElementById('copyTitleBtn');
-            copyBtn.textContent = 'Copied!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy Title';
-                copyBtn.classList.remove('copied');
-            }, 2000);
-        }
-        
-        function copyKeyphraseToClipboard() {
-            const focusKeyphrase = document.getElementById('focusKeyphrase');
-            focusKeyphrase.select();
-            document.execCommand('copy');
-            
-            const copyBtn = document.getElementById('copyKeyphraseBtn');
-            copyBtn.textContent = 'Copied!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy Keyphrase';
-                copyBtn.classList.remove('copied');
-            }, 2000);
-        }
-        
-        function copySlugToClipboard() {
-            const slug = document.getElementById('slug');
-            slug.select();
-            document.execCommand('copy');
-            
-            const copyBtn = document.getElementById('copySlugBtn');
-            copyBtn.textContent = 'Copied!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy Slug';
-                copyBtn.classList.remove('copied');
-            }, 2000);
-        }
-        
-        function copyImageToClipboard() {
-            const imageRenamer = document.getElementById('imageRenamer');
-            imageRenamer.select();
-            document.execCommand('copy');
-            
-            const copyBtn = document.getElementById('copyImageBtn');
-            copyBtn.textContent = 'Copied!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy Image Name';
-                copyBtn.classList.remove('copied');
-            }, 2000);
+            navigator.clipboard.writeText(element.value).then(() => {
+                const copyBtn = document.getElementById(buttonId);
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
         }
     </script>
 </body>
