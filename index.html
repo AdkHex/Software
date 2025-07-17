@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Software Post Generator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>WordPress Software Post Generator</title>
     <style>
         :root {
             --bg-color: #1A202C;
@@ -348,133 +345,275 @@
             <div class="output-box">
                 <h3>📄 WordPress Post Code:</h3>
                 <textarea id="outputCode" readonly></textarea>
-                <button id="copyCodeBtn" onclick="copyToClipboard('copyCodeBtn')">Copy to Clipboard</button>
+                <button id="copyCodeBtn" onclick="copyToClipboard('outputCode', 'copyCodeBtn')">Copy to Clipboard</button>
             </div>
             
             <div class="output-box">
                 <h3>🔽 Download Title:</h3>
                 <input type="text" id="downloadTitle" readonly>
-                <button id="copyTitleBtn" onclick="copyToClipboard('copyTitleBtn', 'downloadTitle')">Copy Title</button>
+                <button id="copyTitleBtn" onclick="copyToClipboard('downloadTitle', 'copyTitleBtn')">Copy Title</button>
             </div>
             
             <div class="output-box">
                 <h3>🔑 Focus Keyphrase:</h3>
                 <input type="text" id="focusKeyphrase" readonly>
-                <button id="copyKeyphraseBtn" onclick="copyToClipboard('copyKeyphraseBtn', 'focusKeyphrase')">Copy Keyphrase</button>
+                <button id="copyKeyphraseBtn" onclick="copyToClipboard('focusKeyphrase', 'copyKeyphraseBtn')">Copy Keyphrase</button>
             </div>
             
             <div class="output-box">
                 <h3>🔗 Slug:</h3>
                 <input type="text" id="slug" readonly>
-                <button id="copySlugBtn" onclick="copyToClipboard('copySlugBtn', 'slug')">Copy Slug</button>
+                <button id="copySlugBtn" onclick="copyToClipboard('slug', 'copySlugBtn')">Copy Slug</button>
             </div>
             
             <div class="output-box">
                 <h3>🖼️ Image Renamer:</h3>
                 <input type="text" id="imageRenamer" readonly>
-                <button id="copyImageBtn" onclick="copyToClipboard('copyImageBtn', 'imageRenamer')">Copy Image Name</button>
+                <button id="copyImageBtn" onclick="copyToClipboard('imageRenamer', 'copyImageBtn')">Copy Image Name</button>
             </div>
         </div>
     </div>
 
     <script>
         function formatReleaseDate(dateString) {
-            if (!dateString) return '1 January 2024';
             const monthMap = {
-                'jan': 'January', 'feb': 'February', 'mar': 'March', 'apr': 'April',
-                'may': 'May', 'jun': 'June', 'jul': 'July', 'aug': 'August',
-                'sep': 'September', 'oct': 'October', 'nov': 'November', 'dec': 'December'
+                'jan': 'January', 'jan,': 'January',
+                'feb': 'February', 'feb,': 'February',
+                'mar': 'March', 'mar,': 'March',
+                'apr': 'April', 'apr,': 'April',
+                'may': 'May', 'may,': 'May',
+                'jun': 'June', 'jun,': 'June',
+                'jul': 'July', 'jul,': 'July',
+                'aug': 'August', 'aug,': 'August',
+                'sep': 'September', 'sep,': 'September',
+                'oct': 'October', 'oct,': 'October',
+                'nov': 'November', 'nov,': 'November',
+                'dec': 'December', 'dec,': 'December'
             };
-            for (const key in monthMap) {
-                dateString = dateString.toLowerCase().replace(key, monthMap[key]);
+
+            const datePattern = /(\d{1,2})\s*([a-z]{3},)\s*(\d{4})|([a-z]{3},)\s*(\d{1,2})\s*,?\s*(\d{4})/i;
+            const match = dateString.match(datePattern);
+
+            if (match) {
+                let day, month, year;
+                if (match[1]) {
+                    day = match[1];
+                    month = match[2].toLowerCase();
+                    year = match[3];
+                } else {
+                    day = match[5];
+                    month = match[4].toLowerCase();
+                    year = match[6];
+                }
+
+                const fullMonth = monthMap[month] || month.replace(',', '');
+                return `${day} ${fullMonth} ${year}`;
             }
-            return dateString;
+
+            return dateString || '1 January 20';
         }
 
         function generateCode() {
             const softwareName = document.getElementById('softwareName').value || 'XXX';
-            const developer = document.getElementById('developer').value || 'Developer';
-            const versionNumberInput = document.getElementById('versionNumber').value || '1.0';
-            const versionExtra = document.getElementById('versionExtra').value;
-            const releaseDate = formatReleaseDate(document.getElementById('releaseDate').value);
+            const developer = document.getElementById('developer').value || '';
+            const versionNumberInput = document.getElementById('versionNumber').value || '1.1';
+            const versionExtra = document.getElementById('versionExtra').value || '';
+            
+            // Format version with brackets
+            let formattedVersion = versionNumberInput.startsWith('v') ? versionNumberInput : 'v' + versionNumberInput;
+            if (versionExtra) {
+                formattedVersion = `(${formattedVersion} ${versionExtra})`;
+            } else {
+                formattedVersion = `(${formattedVersion})`;
+            }
+            
+            const releaseDateInput = document.getElementById('releaseDate').value;
+            const releaseDate = formatReleaseDate(releaseDateInput);
             const size = document.getElementById('size').value || '1.0GB';
-            const purpose = document.getElementById('purpose').value || 'General Purpose';
+            const purpose = document.getElementById('purpose').value || 'PURPOSE';
             const officialLink = document.getElementById('officialLink').value;
-            const source = document.getElementById('source').value || 'N/A';
+            const source = document.getElementById('source').value || '';
             const instructions = document.getElementById('instructions').value;
             const features = document.getElementById('features').value;
             const crackInfo = document.getElementById('crackInfo').value;
             const detailedDescription = document.getElementById('detailedDescription').value;
-
-            let fullVersion = `v${versionNumberInput}` + (versionExtra ? ` ${versionExtra}` : '');
-            let downloadTitle = `Download ${softwareName} ${fullVersion}`;
+            
+            const downloadTitle = `Download ${softwareName} ${formattedVersion}`;
             document.getElementById('downloadTitle').value = downloadTitle;
-
+            
             const focusKeyphrase = `Download ${softwareName}`;
             document.getElementById('focusKeyphrase').value = focusKeyphrase;
-
-            let slug = softwareName.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
+            
+            let slug = softwareName.toLowerCase()
+                .replace(/[^\w\s]/gi, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
             document.getElementById('slug').value = slug;
-
+            
             const imageRenamer = `download-${slug}.webp`;
             document.getElementById('imageRenamer').value = imageRenamer;
+            
+            let officialLinkHtml = '';
+            if (officialLink) {
+                officialLinkHtml = `<a href="${officialLink}" target="_blank" rel="noreferrer noopener nofollow">Official Website</a>`;
+            }
+            
+            let instructionsSection = '';
+            if (instructions) {
+                const lines = instructions.split('\n').filter(line => line.trim() !== '');
+                if (lines.length > 0) {
+                    instructionsSection = `<!-- wp:heading -->
+<h2 class="wp-block-heading">Installation</h2>
+<!-- /wp:heading -->
 
-            const createList = (text) => text.split('\n').filter(line => line.trim() !== '').map(line => `\n<li>${line}</li>\n`).join('\n\n');
-
-            let instructionsSection = instructions ? `\n<h2 class="wp-block-heading">Installation</h2>\n\n\n\n<ul class="wp-block-list">${createList(instructions)}</ul>\n\n\n` : '';
-            let featuresSection = features ? `\n<h2 class="wp-block-heading">Features</h2>\n\n\n\n<ul class="wp-block-list">${createList(features)}</ul>\n\n\n` : '';
-            let crackInfoSection = crackInfo ? `\n<h2 class="wp-block-heading">Crack Info</h2>\n\n\n\n<p>${crackInfo.replace(/\n/g, '<br>')}</p>\n\n\n` : '';
-            let detailedDescriptionSection = detailedDescription ? `\n<h2 class="wp-block-heading">Description</h2>\n\n\n\n<p>${detailedDescription.replace(/\n/g, '<br>')}</p>\n\n\n` : '';
-
-            let code = `<p><strong>Download&nbsp;${softwareName}&nbsp;for Windows FREE</strong>. Here is a direct link to download ${softwareName} latest version ${fullVersion} for free. ${softwareName} is developed by ${developer}. It was released on ${releaseDate} and is considered one of the best software for ${purpose}.</p>
-<h2 class="wp-block-heading">Software Info</h2>
-<ul class="wp-block-list">
-<li><strong>Name</strong>: ${softwareName}</li>
-<li><strong>Version</strong>: ${fullVersion}</li>
-<li><strong>Released</strong>: ${releaseDate}</li>
-<li><strong>Size</strong>: ${size}</li>
-<li><strong>Source</strong>: ${source}</li>
-<li><strong>Official Website</strong>: <a href="${officialLink || '#'}" target="_blank" rel="noreferrer noopener nofollow">Visit Here</a></li>
-</ul>
-<h2 class="wp-block-heading has-text-align-center dl_head">${downloadTitle}</h2>
-<div class="wp-block-group dl_grp">[su_spoiler class="file-spoiler" title="Download as File" open="yes" icon="arrow" style="fancy"]
-<div class="wp-block-buttons"><div class="wp-block-button download_file"><a class="wp-block-button__link wp-element-button" href="#" target="_blank" rel="noreferrer noopener nofollow">Download Zip (${size})</a></div>
-</div>
-<p class="has-text-align-center has-medium-font-size"><strong><mark style="background-color:rgba(0, 0, 0, 0);color:#de0000" class="has-inline-color">Password</mark></strong>: YourPassword</p>
-[/su_spoiler]
-</div>
-${instructionsSection}
-
-[su_spoiler class="description-spoiler" title="More Info" icon="plus" style="fancy"]
-${featuresSection}
-${detailedDescriptionSection}
-${crackInfoSection}
-
-[/su_spoiler]
-<p></p>
+<!-- wp:list -->
+<ul class="wp-block-list">`;
+                    
+            for (let i = 0; i < lines.length; i++) {
+                if (i === lines.length - 1) {
+                            instructionsSection += `<!-- wp:list-item -->
+<li>${lines[i]}</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
 `;
+                } else {
+                            instructionsSection += `<!-- wp:list-item -->
+<li>${lines[i]}</li>
+<!-- /wp:list-item -->
+
+`;
+                        }
+                    }
+                }
+            }
+            
+            let featuresSection = '';
+            if (features) {
+                featuresSection = `<!-- wp:heading -->
+<h2 class="wp-block-heading">Features</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>${features}</p>
+<!-- /wp:paragraph -->
+`;
+            }
+            
+            let crackInfoSection = '';
+            if (crackInfo) {
+                crackInfoSection = `<!-- wp:heading -->
+<h2 class="wp-block-heading">Crack Info</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>${crackInfo}</p>
+<!-- /wp:paragraph -->
+`;
+            }
+            
+            let detailedDescriptionSection = '';
+            if (detailedDescription) {
+                detailedDescriptionSection = `<!-- wp:heading -->
+<h2 class="wp-block-heading">Description</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>${detailedDescription}</p>
+<!-- /wp:paragraph -->
+`;
+            }
+            
+            let code = `<!-- wp:paragraph -->
+<p><strong>Download&nbsp;${softwareName}&nbsp;for Windows FREE</strong>. Here is a direct link to download ${softwareName} latest version ${formattedVersion} for free. ${softwareName} is developed by ${developer || 'GAMESX'}. It was released on ${releaseDate} and is considered one of the best software for ${purpose}.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Software Info</h2>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Name</strong>: ${softwareName}</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Version</strong>: v${versionNumberInput}</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Released</strong>: ${releaseDate}</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Size</strong>: ${size}</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Source</strong>: ${source}</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Available on</strong>: ${officialLinkHtml || '<a href="#" target="_blank" rel="noreferrer noopener nofollow">Official Website</a>'} </li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"textAlign":"center","className":"dl_head"} -->
+<h2 class="wp-block-heading has-text-align-center dl_head">${downloadTitle}</h2>
+<!-- /wp:heading -->
+
+<!-- wp:group {"className":"dl_grp","layout":{"type":"constrained"}} -->
+<div class="wp-block-group dl_grp"><!-- wp:shortcode -->
+[su_spoiler class="file-spoiler" title="Download as File" open="yes" icon="arrow" style="fancy"]
+<!-- /wp:shortcode -->
+
+<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+<div class="wp-block-buttons"><!-- wp:button {"className":"download_file"} -->
+<div class="wp-block-button download_file"><a class="wp-block-button__link wp-element-button" href="#" target="_blank" rel="noreferrer noopener nofollow">Download Zip (${size})</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:paragraph {"align":"center","fontSize":"medium"} -->
+<p class="has-text-align-center has-medium-font-size"><strong><mark style="background-color:rgba(0, 0, 0, 0);color:#de0000" class="has-inline-color">Password</mark></strong>: GamesLeech </p>
+<!-- /wp:paragraph -->
+
+<!-- wp:shortcode -->
+[/su_spoiler]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+${instructionsSection}
+<!-- wp:shortcode -->
+[su_spoiler class="description-spoiler" title="Description" icon="plus" style="fancy"]
+<!-- /wp:shortcode -->
+${featuresSection}
+${crackInfoSection}
+${detailedDescriptionSection}
+<!-- wp:shortcode -->
+[/su_spoiler]
+<!-- /wp:shortcode -->
+
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->`;
 
             document.getElementById('outputCode').value = code;
         }
         
-        function copyToClipboard(buttonId, elementId = 'outputCode') {
+        function copyToClipboard(elementId, buttonId) {
             const element = document.getElementById(elementId);
             element.select();
-            element.setSelectionRange(0, 99999);
+            document.execCommand('copy');
             
-            navigator.clipboard.writeText(element.value).then(() => {
-                const copyBtn = document.getElementById(buttonId);
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                copyBtn.classList.add('copied');
-                
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
+            const copyBtn = document.getElementById(buttonId);
+            copyBtn.textContent = 'Copied!';
+            copyBtn.classList.add('copied');
+            
+            setTimeout(() => {
+                copyBtn.textContent = copyBtn.id === 'copyCodeBtn' ? 'Copy to Clipboard' : 
+                                      copyBtn.id === 'copyTitleBtn' ? 'Copy Title' : 
+                                      copyBtn.id === 'copyKeyphraseBtn' ? 'Copy Keyphrase' : 
+                                      copyBtn.id === 'copySlugBtn' ? 'Copy Slug' : 'Copy Image Name';
+                copyBtn.classList.remove('copied');
+            }, 2000);
         }
     </script>
 </body>
