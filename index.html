@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WordPress Software Post Generator</title>
+    <link rel="icon" href="https://i.pinimg.com/736x/9c/0b/ca/9c0bca9ed55b442248c105d680c77114.jpg" type="image/x-icon">
+
     <style>
         :root {
             --bg-color: #1A202C;
@@ -283,52 +285,40 @@
             
             <div class="form-group">
                 <label for="versionExtra">ℹ️ Version Extra Info (optional):</label>
-                <input type="text" id="versionExtra" placeholder="e.g., x64 or Update 3">
+                <input type="text" id="versionExtra" placeholder="e.g.,build 69 or Update 3">
             </div>
             
-            <div class="two-column">
-                <div class="form-group">
-                    <label for="releaseDate">🗓️ Released:</label>
-                    <input type="text" id="releaseDate" placeholder="e.g., 1 January 2024">
-                </div>
-                
-                <div class="form-group">
-                    <label for="size">💾 Size:</label>
-                    <input type="text" id="size" placeholder="e.g., 1.0GB">
-                </div>
+            <div class="form-group">
+                <label for="size">💾 Size:</label>
+                <input type="text" id="size" placeholder="e.g., 1.0GB">
             </div>
             
             <div class="form-group">
                 <label for="purpose">🎯 Purpose:</label>
                 <input type="text" id="purpose" placeholder="e.g., video editing, system optimization">
             </div>
-            
-            <div class="form-group">
-                <label for="officialLink">🌐 Official Website URL:</label>
-                <input type="text" id="officialLink" placeholder="https://example.com">
-            </div>
 
             <div class="form-group">
                 <label for="source">📍 Source:</label>
-                <input type="text" id="source" placeholder="e.g., FileCR, GetIntoPC">
+                <input type="text" id="source" placeholder="e.g., LRepacks">
             </div>
 
             <div class="form-group">
-                    <label for="detailedDescription">📝 Description:</label>
-                    <textarea id="detailedDescription" placeholder="Enter detailed description"></textarea>
-                </div>
+                <label for="detailedDescription">📝 Description:</label>
+                <textarea id="detailedDescription" placeholder="Enter detailed description"></textarea>
+            </div>
             
             <div class="optional-section">
                 <div class="section-title">✨ Optional Sections</div>
                 
                 <div class="form-group">
-                    <label for="instructions">🛠️ Installations:</label>
-                    <textarea id="instructions" placeholder="Enter installation (one per line)"></textarea>
+                    <label for="instructions">🛠️ Instructions:</label>
+                    <textarea id="instructions" placeholder="Enter instructions (one per line)"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="features">⭐ Features:</label>
-                    <textarea id="features" placeholder="Enter features (one per line)"></textarea>
+                    <textarea id="features" placeholder="Enter features"></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -375,49 +365,18 @@
     </div>
 
     <script>
-        function formatReleaseDate(dateString) {
-            const monthMap = {
-                'jan': 'January', 'jan,': 'January',
-                'feb': 'February', 'feb,': 'February',
-                'mar': 'March', 'mar,': 'March',
-                'apr': 'April', 'apr,': 'April',
-                'may': 'May', 'may,': 'May',
-                'jun': 'June', 'jun,': 'June',
-                'jul': 'July', 'jul,': 'July',
-                'aug': 'August', 'aug,': 'August',
-                'sep': 'September', 'sep,': 'September',
-                'oct': 'October', 'oct,': 'October',
-                'nov': 'November', 'nov,': 'November',
-                'dec': 'December', 'dec,': 'December'
-            };
-
-            const datePattern = /(\d{1,2})\s*([a-z]{3},)\s*(\d{4})|([a-z]{3},)\s*(\d{1,2})\s*,?\s*(\d{4})/i;
-            const match = dateString.match(datePattern);
-
-            if (match) {
-                let day, month, year;
-                if (match[1]) {
-                    day = match[1];
-                    month = match[2].toLowerCase();
-                    year = match[3];
-                } else {
-                    day = match[5];
-                    month = match[4].toLowerCase();
-                    year = match[6];
-                }
-
-                const fullMonth = monthMap[month] || month.replace(',', '');
-                return `${day} ${fullMonth} ${year}`;
-            }
-
-            return dateString || '1 January 20';
-        }
-
         function generateCode() {
             const softwareName = document.getElementById('softwareName').value || 'XXX';
-            const developer = document.getElementById('developer').value || '';
+            const developer = document.getElementById('developer').value || 'GAMESX';
             const versionNumberInput = document.getElementById('versionNumber').value || '1.1';
             const versionExtra = document.getElementById('versionExtra').value || '';
+            const size = document.getElementById('size').value || '1.0GB';
+            const purpose = document.getElementById('purpose').value || 'PURPOSE';
+            const source = document.getElementById('source').value || 'LRepacks';
+            const instructions = document.getElementById('instructions').value;
+            const features = document.getElementById('features').value;
+            const crackInfo = document.getElementById('crackInfo').value;
+            const detailedDescription = document.getElementById('detailedDescription').value;
             
             // Format version with brackets
             let formattedVersion = versionNumberInput.startsWith('v') ? versionNumberInput : 'v' + versionNumberInput;
@@ -426,17 +385,6 @@
             } else {
                 formattedVersion = `(${formattedVersion})`;
             }
-            
-            const releaseDateInput = document.getElementById('releaseDate').value;
-            const releaseDate = formatReleaseDate(releaseDateInput);
-            const size = document.getElementById('size').value || '1.0GB';
-            const purpose = document.getElementById('purpose').value || 'PURPOSE';
-            const officialLink = document.getElementById('officialLink').value;
-            const source = document.getElementById('source').value || '';
-            const instructions = document.getElementById('instructions').value;
-            const features = document.getElementById('features').value;
-            const crackInfo = document.getElementById('crackInfo').value;
-            const detailedDescription = document.getElementById('detailedDescription').value;
             
             const downloadTitle = `Download ${softwareName} ${formattedVersion}`;
             document.getElementById('downloadTitle').value = downloadTitle;
@@ -453,30 +401,26 @@
             const imageRenamer = `download-${slug}.webp`;
             document.getElementById('imageRenamer').value = imageRenamer;
             
-            let officialLinkHtml = '';
-            if (officialLink) {
-                officialLinkHtml = `<a href="${officialLink}" target="_blank" rel="noreferrer noopener nofollow">Official Website</a>`;
-            }
-            
             let instructionsSection = '';
             if (instructions) {
                 const lines = instructions.split('\n').filter(line => line.trim() !== '');
                 if (lines.length > 0) {
-                    instructionsSection = `<!-- wp:heading -->
-<h2 class="wp-block-heading">Installation</h2>
+                    instructionsSection = `
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Instructions</h2>
 <!-- /wp:heading -->
 
 <!-- wp:list -->
 <ul class="wp-block-list">`;
                     
-            for (let i = 0; i < lines.length; i++) {
-                if (i === lines.length - 1) {
+                    for (let i = 0; i < lines.length; i++) {
+                        if (i === lines.length - 1) {
                             instructionsSection += `<!-- wp:list-item -->
 <li>${lines[i]}</li>
 <!-- /wp:list-item --></ul>
 <!-- /wp:list -->
 `;
-                } else {
+                        } else {
                             instructionsSection += `<!-- wp:list-item -->
 <li>${lines[i]}</li>
 <!-- /wp:list-item -->
@@ -489,7 +433,8 @@
             
             let featuresSection = '';
             if (features) {
-                featuresSection = `<!-- wp:heading -->
+                featuresSection = `
+<!-- wp:heading -->
 <h2 class="wp-block-heading">Features</h2>
 <!-- /wp:heading -->
 
@@ -501,7 +446,8 @@
             
             let crackInfoSection = '';
             if (crackInfo) {
-                crackInfoSection = `<!-- wp:heading -->
+                crackInfoSection = `
+<!-- wp:heading -->
 <h2 class="wp-block-heading">Crack Info</h2>
 <!-- /wp:heading -->
 
@@ -524,7 +470,7 @@
             }
             
             let code = `<!-- wp:paragraph -->
-<p><strong>Download&nbsp;${softwareName}&nbsp;for Windows FREE</strong>. Here is a direct link to download ${softwareName} latest version ${formattedVersion} for free. ${softwareName} is developed by ${developer || 'GAMESX'}. It was released on ${releaseDate} and is considered one of the best software for ${purpose}.</p>
+<p><strong>Download&nbsp;${softwareName}&nbsp;for Windows FREE</strong>. Here is a direct link to download ${softwareName} latest version ${formattedVersion} for free. It is developed by ${developer} and is considered one of the best software for ${purpose}.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->
@@ -541,7 +487,7 @@
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
-<li><strong>Released</strong>: ${releaseDate}</li>
+<li><strong>Developer</strong>: ${developer}</li>
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
@@ -550,15 +496,11 @@
 
 <!-- wp:list-item -->
 <li><strong>Source</strong>: ${source}</li>
-<!-- /wp:list-item -->
-
-<!-- wp:list-item -->
-<li><strong>Available on</strong>: ${officialLinkHtml || '<a href="#" target="_blank" rel="noreferrer noopener nofollow">Official Website</a>'} </li>
 <!-- /wp:list-item --></ul>
 <!-- /wp:list -->
 
 <!-- wp:heading {"textAlign":"center","className":"dl_head"} -->
-<h2 class="wp-block-heading has-text-align-center dl_head">${downloadTitle}</h2>
+<h2 class="wp-block-heading has-text-align-center dl_head">${downloadTitle} for Free</h2>
 <!-- /wp:heading -->
 
 <!-- wp:group {"className":"dl_grp","layout":{"type":"constrained"}} -->
@@ -566,11 +508,9 @@
 [su_spoiler class="file-spoiler" title="Download as File" open="yes" icon="arrow" style="fancy"]
 <!-- /wp:shortcode -->
 
-<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
-<div class="wp-block-buttons"><!-- wp:button {"className":"download_file"} -->
-<div class="wp-block-button download_file"><a class="wp-block-button__link wp-element-button" href="#" target="_blank" rel="noreferrer noopener nofollow">Download Zip (${size})</a></div>
-<!-- /wp:button --></div>
-<!-- /wp:buttons -->
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"align":"center","fontSize":"medium"} -->
 <p class="has-text-align-center has-medium-font-size"><strong><mark style="background-color:rgba(0, 0, 0, 0);color:#de0000" class="has-inline-color">Password</mark></strong>: GamesLeech </p>
@@ -584,8 +524,8 @@ ${instructionsSection}
 <!-- wp:shortcode -->
 [su_spoiler class="description-spoiler" title="Description" icon="plus" style="fancy"]
 <!-- /wp:shortcode -->
-${featuresSection}
-${crackInfoSection}
+`;
+code+=`${featuresSection}${crackInfoSection}
 ${detailedDescriptionSection}
 <!-- wp:shortcode -->
 [/su_spoiler]
