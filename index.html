@@ -1,525 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WordPress Software Post Generator</title>
-    <link rel="icon" href="https://i.pinimg.com/736x/9c/0b/ca/9c0bca9ed55b442248c105d680c77114.jpg" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WordPress Software Post Generator</title>
+  <link rel="icon" href="https://i.pinimg.com/736x/9c/0b/ca/9c0bca9ed55b442248c105d680c77114.jpg" type="image/x-icon" />
 
-    <style>
-        :root {
-            --bg-color: #1A202C;
-            --card-bg: #2D3748;
-            --input-bg: #262F40;
-            --primary-accent: #38B2AC;
-            --primary-hover: #4FD1C5;
-            --secondary-accent: #4A5568;
-            --secondary-hover: #606B7F;
-            --success-color: #38A169;
-            --heading-color: #E2E8F0;
-            --text-color: #A0AEC0;
-            --border-color: #4A5568;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Lexend', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            padding: 20px;
-        }
-        
-        h1, h2, h3, label {
-            color: var(--heading-color);
-            margin-bottom: 15px;
-        }
+  <style>
+    :root{
+      /* TRUE BLACK THEME */
+      --bg-color:#000000;
+      --card-bg:#020202;
+      --input-bg:#000000;
 
-        label, .section-title, .output-box h3, .header h1 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .container {
-            display: flex;
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .input-section, .output-section {
-            flex: 1;
-            background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            font-weight: 400;
-            font-size: 0.9rem;
-        }
-        
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
-            background-color: var(--input-bg);
-            color: var(--heading-color);
-            transition: all 0.2s ease-in-out;
-            font-family: 'Lexend', sans-serif;
-        }
+      --primary-accent:#00f5ff;
+      --primary-hover:#49fbff;
 
-        input[type="text"]::placeholder, textarea::placeholder {
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-        
-        input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.3);
-        }
-        
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .output-box {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .output-box:first-child {
-            margin-top: 0;
-        }
-        
-        .output-box h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
-        .output-box input {
-            background-color: var(--input-bg);
-            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .output-box input:focus {
-            border-color: var(--success-color);
-            box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.3);
-        }
-        
-        .output-box input.copied {
-            border-color: var(--success-color);
-            background-color: rgba(56, 161, 105, 0.1);
-        }
-        
-        .output-box textarea {
-            background-color: var(--input-bg);
-            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            height: 400px;
-        }
-        
-        .output-box textarea:focus {
-            border-color: var(--success-color);
-            box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.3);
-        }
-        
-        .output-box textarea.copied {
-            border-color: var(--success-color);
-            background-color: rgba(56, 161, 105, 0.1);
-        }
-        
-        .output-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 25px;
-        }
-        
-        .output-grid .output-box {
-            margin-top: 0;
-            padding: 15px;
-        }
-        
-        .output-grid .output-box h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        
-        .copy-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--success-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s, transform 0.3s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        .copy-notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .header {
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 40px;
-            background: linear-gradient(180deg, rgba(45, 55, 72, 0.2) 0%, rgba(26, 32, 44, 0.3) 100%);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .header h1 {
-            font-size: 36px;
-            justify-content: center;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        .header p {
-            color: var(--text-color);
-            font-size: 18px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .auto-update-note {
-            background-color: rgba(56, 178, 172, 0.1);
-            border-left: 4px solid var(--primary-accent);
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        @media (max-width: 1200px) {
-            .container {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            .two-column, .output-grid {
-                grid-template-columns: 1fr;
-            }
-            .header h1 {
-                font-size: 28px;
-            }
-            .header p {
-                font-size: 16px;
-            }
-        }
-    </style>
+      --success-color:#00ff88;
+
+      --heading-color:#ffffff;
+      --text-color:#b3b3b3;
+
+      --border-color:#1a1a1a;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:'Lexend',system-ui,-apple-system,sans-serif;
+      line-height:1.6;
+      color:var(--text-color);
+      background:var(--bg-color);
+      padding:20px;
+    }
+
+    h1,h2,h3,label{color:var(--heading-color)}
+    label,.section-title,.output-box h3{display:flex;align-items:center;gap:10px}
+
+    .container{
+      display:flex;
+      gap:30px;
+      max-width:1400px;
+      margin:0 auto;
+    }
+
+    .input-section,.output-section{
+      flex:1;
+      background:var(--card-bg);
+      padding:25px;
+      border-radius:12px;
+      border:1px solid var(--border-color);
+    }
+
+    .form-group{margin-bottom:18px}
+
+    label{
+      font-weight:400;
+      font-size:.9rem;
+      margin-bottom:8px;
+    }
+
+    input[type="text"], textarea{
+      width:100%;
+      padding:12px;
+      border:1px solid var(--border-color);
+      border-radius:10px;
+      font-size:14px;
+      background:var(--input-bg);
+      color:var(--heading-color);
+      transition:all .2s ease-in-out;
+      font-family:'Lexend',sans-serif;
+    }
+
+    input[type="text"]::placeholder, textarea::placeholder{
+      color:#666;
+      opacity:1;
+    }
+
+    input[type="text"]:focus, textarea:focus{
+      outline:none;
+      border-color:var(--primary-accent);
+      box-shadow:0 0 0 3px rgba(0,245,255,.25);
+    }
+
+    textarea{min-height:120px;resize:vertical}
+
+    .two-column{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+    }
+
+    .section-title{
+      color:var(--heading-color);
+      font-weight:700;
+      margin:18px 0 14px;
+    }
+
+    .output-box{
+      margin-top:25px;
+      padding:16px;
+      background:var(--bg-color);
+      border-radius:10px;
+      border:1px solid var(--border-color);
+    }
+
+    .output-box:first-child{margin-top:0}
+
+    .output-box h3{
+      font-size:16px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .output-box input,
+    .output-box textarea{
+      background:var(--input-bg);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+
+    .output-box input:focus,
+    .output-box textarea:focus{
+      border-color:var(--success-color);
+      box-shadow:0 0 0 3px rgba(0,255,136,.18);
+    }
+
+    .output-box input.copied,
+    .output-box textarea.copied{
+      border-color:var(--success-color);
+      background:rgba(0,255,136,.08);
+    }
+
+    /* WordPress textarea HALF original (400px -> 200px) */
+    .output-box textarea{
+      height:200px;
+    }
+
+    /* keep 4 output inputs in separate row */
+    .output-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-top:20px;
+    }
+
+    .output-grid .output-box{
+      margin-top:0;
+      padding:15px;
+    }
+
+    .output-grid .output-box h3{
+      font-size:15px;
+      margin-bottom:10px;
+    }
+
+    .copy-notification{
+      position:fixed;
+      top:20px;
+      right:20px;
+      background:var(--success-color);
+      color:#000;
+      padding:12px 20px;
+      border-radius:10px;
+      font-weight:700;
+      z-index:1000;
+      opacity:0;
+      transform:translateY(-20px);
+      transition:opacity .3s, transform .3s;
+      box-shadow:0 8px 18px rgba(0,0,0,.35);
+    }
+
+    .copy-notification.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (max-width:1200px){
+      .container{flex-direction:column}
+    }
+
+    @media (max-width:768px){
+      body{padding:15px}
+      .two-column{grid-template-columns:1fr}
+    }
+  </style>
 </head>
-<body>
 
-    
-    <div class="container">
-        <div class="input-section">
-            
-            <div class="two-column">
-                <div class="form-group">
-                    <label for="softwareName">💻 Software Name:</label>
-                    <input type="text" id="softwareName" placeholder="Enter software name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="developer">👨‍💻 Developer:</label>
-                    <input type="text" id="developer" placeholder="Enter developer name">
-                </div>
-            </div>
-            
-            <div class="two-column">
-                <div class="form-group">
-                    <label for="versionNumber">🔖 Version Number:</label>
-                    <input type="text" id="versionNumber" placeholder="e.g., 1.2 (without 'v')">
-                </div>
-                
-                <div class="form-group">
-                    <label for="versionExtra">ℹ️ Version Extra Info (optional):</label>
-                    <input type="text" id="versionExtra" placeholder="e.g., | build 69 or + Update 3">
-                </div>
-            </div>
-            
-            <div class="two-column">
-                <div class="form-group">
-                    <label for="size">💾 Size:</label>
-                    <input type="text" id="size" placeholder="e.g., 1.0GB">
-                </div>
-                
-                <div class="form-group">
-                    <label for="source">📍 Source:</label>
-                    <input type="text" id="source" placeholder="e.g., LRepacks">
-                </div>
-            </div>
-            
-            <div class="two-column">
-                <div class="form-group">
-                    <label for="purpose">🎯 Purpose:</label>
-                    <textarea id="purpose" placeholder="e.g., video editing, system optimization"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="detailedDescription">📝 Description:</label>
-                    <textarea id="detailedDescription" placeholder="Enter detailed description"></textarea>
-                </div>
-            </div>
-            
-            <div class="optional-section">
-                <div class="section-title">✨ Optional Sections</div>
-                
-                <div class="form-group">
-                    <label for="instructions">🛠️ Instructions:</label>
-                    <textarea id="instructions" placeholder="Enter instructions (one per line)"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="features">⭐ Features:</label>
-                    <textarea id="features" placeholder="Enter features"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="crackInfo">📌 Crack Info:</label>
-                    <textarea id="crackInfo" placeholder="Enter crack information"></textarea>
-                </div>
-            </div>
+<body>
+  <div class="container">
+    <div class="input-section">
+
+      <div class="two-column">
+        <div class="form-group">
+          <label for="softwareName">💻 Software Name:</label>
+          <input type="text" id="softwareName" placeholder="Enter software name" />
         </div>
-        
-        <div class="output-section">
-            <div class="output-box">
-                <h3>📄 WordPress Post Code:</h3>
-                <textarea id="outputCode" readonly onclick="copyToClipboard('outputCode', this)"></textarea>
-                <p style="margin-top: 10px; font-size: 13px; color: var(--text-color); text-align: center;">Click on the code box to copy</p>
-            </div>
-            
-            <div class="output-grid">
-                <div class="output-box">
-                    <h3>🔽 Download Title:</h3>
-                    <input type="text" id="downloadTitle" readonly onclick="copyToClipboard('downloadTitle', this)">
-                </div>
-                
-                <div class="output-box">
-                    <h3>🔑 Focus Keyphrase:</h3>
-                    <input type="text" id="focusKeyphrase" readonly onclick="copyToClipboard('focusKeyphrase', this)">
-                </div>
-                
-                <div class="output-box">
-                    <h3>🔗 Slug:</h3>
-                    <input type="text" id="slug" readonly onclick="copyToClipboard('slug', this)">
-                </div>
-                
-                <div class="output-box">
-                    <h3>🖼️ Image Renamer:</h3>
-                    <input type="text" id="imageRenamer" readonly onclick="copyToClipboard('imageRenamer', this)">
-                </div>
-            </div>
+
+        <div class="form-group">
+          <label for="developer">👨‍💻 Developer:</label>
+          <input type="text" id="developer" placeholder="Enter developer name" />
         </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label for="versionNumber">🔖 Version Number:</label>
+          <input type="text" id="versionNumber" placeholder="e.g., 1.2 (without 'v')" />
+        </div>
+
+        <div class="form-group">
+          <label for="versionExtra">ℹ️ Version Extra Info (optional):</label>
+          <input type="text" id="versionExtra" placeholder="e.g., | build 69 or + Update 3" />
+        </div>
+      </div>
+
+      <!-- SIZE + PURPOSE side-by-side (purpose is INPUT) -->
+      <div class="two-column">
+        <div class="form-group">
+          <label for="size">💾 Size:</label>
+          <input type="text" id="size" placeholder="e.g., 1.0GB" />
+        </div>
+
+        <div class="form-group">
+          <label for="purpose">🎯 Purpose:</label>
+          <input type="text" id="purpose" placeholder="e.g., video editing, system optimization" />
+        </div>
+      </div>
+
+      <!-- Description full width -->
+      <div class="form-group">
+        <label for="detailedDescription">📝 Description:</label>
+        <textarea id="detailedDescription" placeholder="Enter detailed description"></textarea>
+      </div>
+
+      <div class="optional-section">
+        <div class="section-title">✨ Optional Sections</div>
+
+        <div class="form-group">
+          <label for="instructions">🛠️ Instructions:</label>
+          <textarea id="instructions" placeholder="Enter instructions (one per line)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="features">⭐ Features:</label>
+          <textarea id="features" placeholder="Enter features"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="crackInfo">📌 Crack Info:</label>
+          <textarea id="crackInfo" placeholder="Enter crack information"></textarea>
+        </div>
+      </div>
     </div>
 
-    <div id="copyNotification" class="copy-notification">Copied to clipboard!</div>
+    <div class="output-section">
+      <div class="output-box">
+        <h3>📄 WordPress Post Code:</h3>
+        <textarea id="outputCode" readonly onclick="copyToClipboard('outputCode', this)"></textarea>
+        <p style="margin-top:10px;font-size:13px;color:var(--text-color);text-align:center;">
+          Click on the code box to copy
+        </p>
+      </div>
 
-    <script>
-        // Get all input elements
-        const inputElements = [
-            'softwareName', 'developer', 'versionNumber', 'versionExtra',
-            'size', 'source', 'purpose', 'detailedDescription',
-            'instructions', 'features', 'crackInfo'
-        ];
-        
-        // Add event listeners to all inputs for real-time updates
-        inputElements.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.addEventListener('input', generateCode);
-                element.addEventListener('change', generateCode);
-            }
-        });
-        
-        // Initial generation
-        generateCode();
-        
-        function generateCode() {
-            // Get all input values
-            const softwareName = document.getElementById('softwareName').value.trim();
-            const developer = document.getElementById('developer').value.trim();
-            const versionNumberInput = document.getElementById('versionNumber').value.trim();
-            const versionExtra = document.getElementById('versionExtra').value.trim();
-            const size = document.getElementById('size').value.trim();
-            const purpose = document.getElementById('purpose').value.trim();
-            const source = document.getElementById('source').value.trim();
-            const instructions = document.getElementById('instructions').value.trim();
-            const features = document.getElementById('features').value.trim();
-            const crackInfo = document.getElementById('crackInfo').value.trim();
-            const detailedDescription = document.getElementById('detailedDescription').value.trim();
-            
-            // Generate Download Title
-            let downloadTitle = 'Download ' + (softwareName || 'Software');
-            
-            if (versionNumberInput) {
-                let formattedVersion = versionNumberInput.startsWith('v') ? versionNumberInput : 'v' + versionNumberInput;
-                if (versionExtra) {
-                    formattedVersion = ` (${formattedVersion} ${versionExtra})`;
-                } else {
-                    formattedVersion = ` (${formattedVersion})`;
-                }
-                downloadTitle += formattedVersion;
-            }
-            
-            document.getElementById('downloadTitle').value = downloadTitle;
-            
-            // Generate Focus Keyphrase
-            const focusKeyphrase = softwareName ? `Download ${softwareName}` : 'Download Software';
-            document.getElementById('focusKeyphrase').value = focusKeyphrase;
-            
-            // Generate Slug
-            let slug = (softwareName || 'software').toLowerCase()
-                .replace(/[^\w\s]/gi, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-');
-            document.getElementById('slug').value = slug;
-            
-            // Generate Image Renamer
-            const imageRenamer = `download-${slug}.webp`;
-            document.getElementById('imageRenamer').value = imageRenamer;
-            
-            // Build Software Info List - only include non-empty fields
-            let softwareInfoList = '';
-            
-            if (softwareName) {
-                softwareInfoList += `<!-- wp:list-item -->
+      <div class="output-grid">
+        <div class="output-box">
+          <h3>🔽 Download Title:</h3>
+          <input type="text" id="downloadTitle" readonly onclick="copyToClipboard('downloadTitle', this)" />
+        </div>
+
+        <div class="output-box">
+          <h3>🔑 Focus Keyphrase:</h3>
+          <input type="text" id="focusKeyphrase" readonly onclick="copyToClipboard('focusKeyphrase', this)" />
+        </div>
+
+        <div class="output-box">
+          <h3>🔗 Slug:</h3>
+          <input type="text" id="slug" readonly onclick="copyToClipboard('slug', this)" />
+        </div>
+
+        <div class="output-box">
+          <h3>🖼️ Image Renamer:</h3>
+          <input type="text" id="imageRenamer" readonly onclick="copyToClipboard('imageRenamer', this)" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="copyNotification" class="copy-notification">Copied to clipboard!</div>
+
+  <script>
+    // All input ids (SOURCE removed)
+    const inputElements = [
+      'softwareName', 'developer', 'versionNumber', 'versionExtra',
+      'size', 'purpose', 'detailedDescription',
+      'instructions', 'features', 'crackInfo'
+    ];
+
+    inputElements.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', generateCode);
+        el.addEventListener('change', generateCode);
+      }
+    });
+
+    generateCode();
+
+    function generateCode() {
+      const softwareName = document.getElementById('softwareName').value.trim();
+      const developer = document.getElementById('developer').value.trim();
+      const versionNumberInput = document.getElementById('versionNumber').value.trim();
+      const versionExtra = document.getElementById('versionExtra').value.trim();
+      const size = document.getElementById('size').value.trim();
+      const purpose = document.getElementById('purpose').value.trim(); // purpose is INPUT now
+      const instructions = document.getElementById('instructions').value.trim();
+      const features = document.getElementById('features').value.trim();
+      const crackInfo = document.getElementById('crackInfo').value.trim();
+      const detailedDescription = document.getElementById('detailedDescription').value.trim();
+
+      // Download Title
+      let downloadTitle = 'Download ' + (softwareName || 'Software');
+
+      if (versionNumberInput) {
+        let formattedVersion = versionNumberInput.startsWith('v') ? versionNumberInput : 'v' + versionNumberInput;
+        if (versionExtra) {
+          formattedVersion = ` (${formattedVersion} ${versionExtra})`;
+        } else {
+          formattedVersion = ` (${formattedVersion})`;
+        }
+        downloadTitle += formattedVersion;
+      }
+
+      document.getElementById('downloadTitle').value = downloadTitle;
+
+      // Focus Keyphrase
+      document.getElementById('focusKeyphrase').value = softwareName ? `Download ${softwareName}` : 'Download Software';
+
+      // Slug
+      let slug = (softwareName || 'software').toLowerCase()
+        .replace(/[^\w\s]/gi, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+      document.getElementById('slug').value = slug;
+
+      // Image Renamer (.png)
+      document.getElementById('imageRenamer').value = `download-${slug}.png`;
+
+      // Software Info list (SOURCE removed)
+      let softwareInfoList = '';
+
+      if (softwareName) {
+        softwareInfoList += `<!-- wp:list-item -->
 <li><strong>Name</strong>: ${softwareName}</li>
 <!-- /wp:list-item -->
 
 `;
-            }
-            
-            if (versionNumberInput) {
-                softwareInfoList += `<!-- wp:list-item -->
+      }
+
+      if (versionNumberInput) {
+        softwareInfoList += `<!-- wp:list-item -->
 <li><strong>Version</strong>: v${versionNumberInput}</li>
 <!-- /wp:list-item -->
 
 `;
-            }
-            
-            if (developer) {
-                softwareInfoList += `<!-- wp:list-item -->
+      }
+
+      if (developer) {
+        softwareInfoList += `<!-- wp:list-item -->
 <li><strong>Developer</strong>: ${developer}</li>
 <!-- /wp:list-item -->
 
 `;
-            }
-            
-            if (size) {
-                softwareInfoList += `<!-- wp:list-item -->
+      }
+
+      if (size) {
+        softwareInfoList += `<!-- wp:list-item -->
 <li><strong>Size</strong>: ${size}</li>
 <!-- /wp:list-item -->
 
 `;
-            }
-            
-            if (source) {
-                softwareInfoList += `<!-- wp:list-item -->
-<li><strong>Source</strong>: ${source}</li>
-<!-- /wp:list-item -->
+      }
 
-`;
-            }
-            
-            // Remove the last newline characters if list exists
-            if (softwareInfoList) {
-                softwareInfoList = softwareInfoList.trim();
-            }
-            
-            // Generate introduction paragraph
-            let introParagraph = `<p><strong>Download${softwareName ? ' ' + softwareName : ''} for Windows FREE</strong>.`;
-            
-            if (softwareName || versionNumberInput || developer || purpose) {
-                introParagraph += ' Here is a direct link to download ';
-                
-                if (softwareName) introParagraph += softwareName;
-                if (versionNumberInput) introParagraph += ` latest version v${versionNumberInput}`;
-                
-                introParagraph += ' for free.';
-                
-                if (developer) introParagraph += ` It is developed by ${developer}.`;
-                if (purpose) introParagraph += ` This software is designed for ${purpose}.`;
-            }
-            
-            introParagraph += '</p>';
-            
-            // Build instructions section
-            let instructionsSection = '';
-            if (instructions) {
-                const lines = instructions.split('\n').filter(line => line.trim() !== '');
-                if (lines.length > 0) {
-                    instructionsSection = `
+      if (softwareInfoList) softwareInfoList = softwareInfoList.trim();
+
+      // Intro paragraph
+      let introParagraph = `<p><strong>Download${softwareName ? ' ' + softwareName : ''} for Windows FREE</strong>.`;
+
+      if (softwareName || versionNumberInput || developer || purpose) {
+        introParagraph += ' Here is a direct link to download ';
+
+        if (softwareName) introParagraph += softwareName;
+        if (versionNumberInput) introParagraph += ` latest version (v${versionNumberInput})`;
+
+        introParagraph += ' for free.';
+
+        if (developer) introParagraph += ` It is developed by ${developer} and`;
+        if (purpose) introParagraph += ` is considered one of the best software for ${purpose}`;
+      }
+
+      introParagraph += '</p>';
+
+      // Instructions section
+      let instructionsSection = '';
+      if (instructions) {
+        const lines = instructions.split('\n').filter(line => line.trim() !== '');
+        if (lines.length > 0) {
+          instructionsSection = `
 <!-- wp:heading -->
 <h2 class="wp-block-heading">Instructions</h2>
 <!-- /wp:heading -->
 
 <!-- wp:list -->
 <ul class="wp-block-list">`;
-                    
-                    for (let i = 0; i < lines.length; i++) {
-                        if (i === lines.length - 1) {
-                            instructionsSection += `<!-- wp:list-item -->
-<li>${lines[i]}</li>
-<!-- /wp:list-item --></ul>
-<!-- /wp:list -->
-`;
-                        } else {
-                            instructionsSection += `<!-- wp:list-item -->
+
+          for (let i = 0; i < lines.length; i++) {
+            instructionsSection += `<!-- wp:list-item -->
 <li>${lines[i]}</li>
 <!-- /wp:list-item -->
 
 `;
-                        }
-                    }
-                }
-            }
-            
-            // Build features section
-            let featuresSection = '';
-            if (features) {
-                featuresSection = `
+          }
+
+          instructionsSection += `</ul>
+<!-- /wp:list -->
+`;
+        }
+      }
+
+      // Features section
+      let featuresSection = '';
+      if (features) {
+        featuresSection = `
 <!-- wp:heading -->
 <h2 class="wp-block-heading">Features</h2>
 <!-- /wp:heading -->
@@ -528,12 +441,12 @@
 <p>${features}</p>
 <!-- /wp:paragraph -->
 `;
-            }
-            
-            // Build crack info section
-            let crackInfoSection = '';
-            if (crackInfo) {
-                crackInfoSection = `
+      }
+
+      // Crack info section
+      let crackInfoSection = '';
+      if (crackInfo) {
+        crackInfoSection = `
 <!-- wp:heading -->
 <h2 class="wp-block-heading">Crack Info</h2>
 <!-- /wp:heading -->
@@ -542,12 +455,12 @@
 <p>${crackInfo}</p>
 <!-- /wp:paragraph -->
 `;
-            }
-            
-            // Build description section
-            let detailedDescriptionSection = '';
-            if (detailedDescription) {
-                detailedDescriptionSection = `<!-- wp:heading -->
+      }
+
+      // Description section
+      let detailedDescriptionSection = '';
+      if (detailedDescription) {
+        detailedDescriptionSection = `<!-- wp:heading -->
 <h2 class="wp-block-heading">Description</h2>
 <!-- /wp:heading -->
 
@@ -555,16 +468,15 @@
 <p>${detailedDescription}</p>
 <!-- /wp:paragraph -->
 `;
-            }
-            
-            // Generate the complete WordPress code
-            let code = `<!-- wp:paragraph -->
+      }
+
+      // Complete WordPress code
+      let code = `<!-- wp:paragraph -->
 ${introParagraph}
 <!-- /wp:paragraph -->`;
-            
-            // Add Software Info section only if there's content
-            if (softwareInfoList) {
-                code += `
+
+      if (softwareInfoList) {
+        code += `
 
 <!-- wp:heading -->
 <h2 class="wp-block-heading">Software Info</h2>
@@ -573,10 +485,10 @@ ${introParagraph}
 <!-- wp:list -->
 <ul class="wp-block-list">${softwareInfoList}</ul>
 <!-- /wp:list -->`;
-            }
-            
-            // Add Download section
-            code += `
+      }
+
+      // Download section
+      code += `
 
 <!-- wp:heading {"textAlign":"center","className":"dl_head"} -->
 <h2 class="wp-block-heading has-text-align-center dl_head">${downloadTitle} for Free</h2>
@@ -604,15 +516,13 @@ ${instructionsSection}
 [su_spoiler class="description-spoiler" title="Description" icon="plus" style="fancy"]
 <!-- /wp:shortcode -->
 `;
-            
-            // Add optional sections inside the description spoiler
-            if (featuresSection || crackInfoSection || detailedDescriptionSection) {
-                code += `${featuresSection}${crackInfoSection}
+
+      if (featuresSection || crackInfoSection || detailedDescriptionSection) {
+        code += `${featuresSection}${crackInfoSection}
 ${detailedDescriptionSection}`;
-            }
-            
-            // Close the description spoiler
-            code += `
+      }
+
+      code += `
 <!-- wp:shortcode -->
 [/su_spoiler]
 <!-- /wp:shortcode -->
@@ -621,44 +531,34 @@ ${detailedDescriptionSection}`;
 <p></p>
 <!-- /wp:paragraph -->`;
 
-            document.getElementById('outputCode').value = code;
-        }
-        
-        function copyToClipboard(elementId, element) {
-            const copyElement = document.getElementById(elementId);
-            
-            // Select the text
-            if (copyElement.tagName === 'INPUT' || copyElement.tagName === 'TEXTAREA') {
-                copyElement.select();
-                copyElement.setSelectionRange(0, 99999); // For mobile devices
-            } else {
-                const range = document.createRange();
-                range.selectNode(copyElement);
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(range);
-            }
-            
-            // Copy to clipboard
-            document.execCommand('copy');
-            
-            // Remove selection
-            window.getSelection().removeAllRanges();
-            
-            // Add visual feedback to the clicked element
-            if (element) {
-                element.classList.add('copied');
-                setTimeout(() => {
-                    element.classList.remove('copied');
-                }, 1000);
-            }
-            
-            // Show notification
-            const notification = document.getElementById('copyNotification');
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2000);
-        }
-    </script>
+      document.getElementById('outputCode').value = code;
+    }
+
+    function copyToClipboard(elementId, element) {
+      const copyElement = document.getElementById(elementId);
+
+      if (copyElement.tagName === 'INPUT' || copyElement.tagName === 'TEXTAREA') {
+        copyElement.select();
+        copyElement.setSelectionRange(0, 99999);
+      } else {
+        const range = document.createRange();
+        range.selectNode(copyElement);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      }
+
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+
+      if (element) {
+        element.classList.add('copied');
+        setTimeout(() => element.classList.remove('copied'), 900);
+      }
+
+      const notification = document.getElementById('copyNotification');
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 1600);
+    }
+  </script>
 </body>
 </html>
