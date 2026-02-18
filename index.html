@@ -396,7 +396,7 @@
 
         introParagraph += ' for free.';
 
-        if (developer) introParagraph += ` It is developed by ${developer} and`;
+        if (developer) introParagraph += ` ${softwareName} is developed by ${developer} and`;
         if (purpose) introParagraph += ` is considered one of the best software for ${purpose}`;
       }
 
@@ -483,7 +483,10 @@ ${introParagraph}
 <!-- /wp:heading -->
 
 <!-- wp:list -->
-<ul class="wp-block-list">${softwareInfoList}</ul>
+<ul class="wp-block-list">${softwareInfoList}
+<!-- wp:list-item -->
+<li><strong><mark style="background-color:rgba(0, 0, 0, 0)" class="has-inline-color has-theme-palette-2-color">Password</mark></strong>: GamesLeech or SoftwareLeech</li>
+<!-- /wp:list-item --></ul>
 <!-- /wp:list -->`;
       }
 
@@ -501,10 +504,6 @@ ${introParagraph}
 
 <!-- wp:paragraph -->
 <p></p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph {"align":"center","fontSize":"medium"} -->
-<p class="has-text-align-center has-medium-font-size"><strong><mark style="background-color:rgba(0, 0, 0, 0);color:#de0000" class="has-inline-color">Password</mark></strong>: GamesLeech </p>
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
